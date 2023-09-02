@@ -1,7 +1,7 @@
 {
-  "name": "web-ext",
-  "version": "7.6.0",
-  "description": "A command line tool to help build, run, and test web extensions",
+  "name": "web-ext-run",
+  "version": "0.1.0",
+  "description": "A tool to open and run web extensions",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -18,32 +18,23 @@
     "npm": ">=8.0.0"
   },
   "engine-strict": true,
-  "bin": {
-    "web-ext": "bin/web-ext.js"
-  },
   "scripts": {
     "build": "node scripts/build",
     "start": "node scripts/develop",
     "test": "node scripts/test",
     "test-coverage": "node scripts/test --coverage",
     "test-functional": "node scripts/test-functional",
-    "audit-deps": "node ./scripts/audit-deps",
-    "changelog": "npx conventional-changelog-cli -p angular -u",
-    "changelog-lint": "commitlint --from master",
-    "changelog-lint-from-stdin": "commitlint",
-    "github-pr-title-lint": "node ./scripts/github-pr-title-lint",
-    "gen-contributing-toc": "npx doctoc CONTRIBUTING.md",
     "prettier": "prettier --write '**'",
     "prettier-ci": "prettier --list-different '**' || (echo '\n\nThis failure means you did not run `npm run prettier-dev` before committing\n\n' && exit 1)",
     "prettier-dev": "pretty-quick --branch master"
   },
-  "homepage": "https://github.com/mozilla/web-ext",
+  "homepage": "https://github.com/aklinker1/web-ext-run",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mozilla/web-ext.git"
+    "url": "git://github.com/aklinker1/web-ext-run.git"
   },
   "bugs": {
-    "url": "http://github.com/mozilla/web-ext/issues"
+    "url": "http://github.com/aklinker1/web-ext-run/issues"
   },
   "keywords": [
     "web",
@@ -60,25 +51,17 @@
   "dependencies": {
     "@babel/runtime": "7.23.9",
     "@devicefarmer/adbkit": "3.2.6",
-    "addons-linter": "6.21.0",
     "bunyan": "1.8.15",
-    "camelcase": "8.0.0",
     "chrome-launcher": "0.15.1",
     "debounce": "1.2.1",
-    "decamelize": "6.0.0",
     "es6-error": "4.1.1",
     "firefox-profile": "4.5.0",
     "fs-extra": "11.2.0",
     "fx-runner": "1.4.0",
-    "https-proxy-agent": "^7.0.0",
-    "jose": "4.15.4",
-    "jszip": "3.10.1",
     "mkdirp": "1.0.4",
     "multimatch": "6.0.0",
     "mz": "2.7.0",
-    "node-fetch": "3.3.2",
     "node-notifier": "10.0.1",
-    "open": "9.1.0",
     "parse-json": "7.1.1",
     "promise-toolbox": "0.21.0",
     "source-map-support": "0.5.21",
@@ -88,7 +71,6 @@
     "update-notifier": "6.0.2",
     "watchpack": "2.4.0",
     "ws": "8.16.0",
-    "yargs": "17.7.2",
     "zip-dir": "2.0.0"
   },
   "devDependencies": {

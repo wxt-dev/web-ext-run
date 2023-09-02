@@ -1,7 +1,7 @@
 {
-  "name": "web-ext",
-  "version": "8.6.0",
-  "description": "A command line tool to help build, run, and test web extensions",
+  "name": "web-ext-run",
+  "version": "0.1.0",
+  "description": "A tool to open and run web extensions",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -19,32 +19,23 @@
     "npm": ">=8.0.0"
   },
   "engine-strict": true,
-  "bin": {
-    "web-ext": "bin/web-ext.js"
-  },
   "scripts": {
     "build": "node scripts/build",
     "start": "node scripts/develop",
     "test": "node scripts/test",
     "test-coverage": "node scripts/test --coverage",
     "test-functional": "node scripts/test-functional",
-    "audit-deps": "node ./scripts/audit-deps",
-    "changelog": "npx conventional-changelog-cli -p angular -u",
-    "changelog-lint": "commitlint --from master",
-    "changelog-lint-from-stdin": "commitlint",
-    "github-pr-title-lint": "node ./scripts/github-pr-title-lint",
-    "gen-contributing-toc": "npx doctoc CONTRIBUTING.md",
     "prettier": "prettier --write '**'",
     "prettier-ci": "prettier --list-different '**' || (echo '\n\nThis failure means you did not run `npm run prettier-dev` before committing\n\n' && exit 1)",
     "prettier-dev": "pretty-quick --branch master"
   },
-  "homepage": "https://github.com/mozilla/web-ext",
+  "homepage": "https://github.com/aklinker1/web-ext-run",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mozilla/web-ext.git"
+    "url": "git://github.com/aklinker1/web-ext-run.git"
   },
   "bugs": {
-    "url": "http://github.com/mozilla/web-ext/issues"
+    "url": "http://github.com/aklinker1/web-ext-run/issues"
   },
   "keywords": [
     "web",
@@ -61,20 +52,13 @@
   "dependencies": {
     "@babel/runtime": "7.27.0",
     "@devicefarmer/adbkit": "3.3.8",
-    "addons-linter": "7.11.0",
-    "camelcase": "8.0.0",
     "chrome-launcher": "1.1.2",
     "debounce": "1.2.1",
-    "decamelize": "6.0.0",
     "es6-error": "4.1.1",
     "firefox-profile": "4.7.0",
     "fx-runner": "1.4.0",
-    "https-proxy-agent": "^7.0.0",
-    "jose": "5.9.6",
-    "jszip": "3.10.1",
     "multimatch": "6.0.0",
     "node-notifier": "10.0.1",
-    "open": "9.1.0",
     "parse-json": "7.1.1",
     "pino": "9.6.0",
     "promise-toolbox": "0.21.0",
@@ -85,7 +69,6 @@
     "update-notifier": "7.3.1",
     "watchpack": "2.4.2",
     "ws": "8.18.1",
-    "yargs": "17.7.2",
     "zip-dir": "2.0.0"
   },
   "devDependencies": {

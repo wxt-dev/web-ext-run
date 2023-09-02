@@ -13,6 +13,10 @@ Ultimately, it aims to support browser extensions in a standard, portable,
 cross-platform way. Initially, it will provide a streamlined experience for developing
 [Firefox Extensions](https://developer.mozilla.org/en-US/Add-ons/WebExtensions).
 
+## Fork
+
+This fork removes everything but the JS API for `cmd.run`. Originally created for my build tools ([`wxt`](https://github.com/aklinker1/wxt) and [`vite-plugin-web-extension`](https://github.com/aklinker1/vite-plugin-web-extension)) to open the extension during development, but without all the peer dependency issues.
+
 ## Documentation
 
 - [Getting started with web-ext][web-ext-user-docs]

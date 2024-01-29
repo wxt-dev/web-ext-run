@@ -1,6 +1,6 @@
 {
   "name": "web-ext-run",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A tool to open and run web extensions",
   "type": "module",
   "main": "index.js",

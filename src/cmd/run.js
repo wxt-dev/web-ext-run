@@ -49,6 +49,7 @@ export default async function run(
     firefoxApkComponent,
     // Chromium CLI options.
     chromiumBinary,
+    chromiumPref,
     chromiumProfile,
   },
   {
@@ -65,7 +66,7 @@ export default async function run(
   if (preInstall) {
     log.info(
       "Disabled auto-reloading because it's not possible with " +
-        '--pre-install',
+      '--pre-install',
     );
     noReload = true;
   }
@@ -86,6 +87,10 @@ export default async function run(
     customPrefs['extensions.manifestV3.enabled'] = true;
   }
 
+  // Create an alias for --chromium-pref since it has been transformed into an
+  // object containing one or more preferences.
+  const customChromiumPrefs = { ...chromiumPref };
+
   const manifestData = await getValidatedManifest(sourceDir);
 
   const profileDir = firefoxProfile || chromiumProfile;
@@ -94,7 +99,7 @@ export default async function run(
     if (!profileDir) {
       throw new UsageError(
         '--profile-create-if-missing requires ' +
-          '--firefox-profile or --chromium-profile',
+        '--firefox-profile or --chromium-profile',
       );
     }
     const isDir = fs.existsSync(profileDir);
@@ -193,6 +198,7 @@ export default async function run(
       ...commonRunnerParams,
       chromiumBinary,
       chromiumProfile,
+      customChromiumPrefs,
     };
 
     const chromiumRunner = await createExtensionRunner({

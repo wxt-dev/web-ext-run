@@ -12,6 +12,7 @@ import {
   launch as defaultChromiumLaunch,
 } from 'chrome-launcher';
 import WebSocket, { WebSocketServer } from 'ws';
+import set from 'set-value';
 
 import { createLogger } from '../util/logger.js';
 import { TempDir } from '../util/temp-dir.js';
@@ -25,6 +26,10 @@ const EXCLUDED_CHROME_FLAGS = ['--disable-extensions', '--mute-audio'];
 export const DEFAULT_CHROME_FLAGS = ChromeLauncher.defaultFlags().filter(
   (flag) => !EXCLUDED_CHROME_FLAGS.includes(flag),
 );
+
+const DEFAULT_PREFS = {
+  'extensions.ui.developer_mode': true,
+};
 
 /**
  * Implements an IExtensionRunner which manages a Chromium instance.
@@ -121,7 +126,7 @@ export class ChromiumExtensionRunner {
 
     // Prevent unhandled socket error (e.g. when chrome
     // is exiting, See https://github.com/websockets/ws/issues/1256).
-    this.wss.on('connection', function (socket) {
+    this.wss.on('connection', function(socket) {
       socket.on('error', (err) => {
         log.debug(`websocket connection error: ${err}`);
       });
@@ -164,9 +169,9 @@ export class ChromiumExtensionRunner {
       ) {
         throw new Error(
           'The profile you provided is not in a ' +
-            'user-data-dir. The changes cannot be kept. Please either ' +
-            'remove --keep-profile-changes or use a profile in a ' +
-            'user-data-dir directory',
+          'user-data-dir. The changes cannot be kept. Please either ' +
+          'remove --keep-profile-changes or use a profile in a ' +
+          'user-data-dir directory',
         );
       }
     } else if (!this.params.keepProfileChanges) {
@@ -210,6 +215,7 @@ export class ChromiumExtensionRunner {
       userDataDir,
       // Ignore default flags to keep the extension enabled.
       ignoreDefaultFlags: true,
+      prefs: this.getPrefs(),
     });
 
     this.chromiumInstance.process.once('close', () => {
@@ -413,5 +419,19 @@ export class ChromiumExtensionRunner {
         log.error(error);
       }
     }
+  }
+
+  /**
+   * Returns a deep preferences object based on a set of flat preferences, like
+   * "extensions.ui.developer_mode".
+   */
+  getPrefs() {
+    return Object.entries({
+      ...DEFAULT_PREFS,
+      ...(this.params.customChromiumPrefs || {}),
+    }).reduce((prefs, [key, value]) => {
+      set(prefs, key, value);
+      return prefs;
+    }, {});
   }
 }

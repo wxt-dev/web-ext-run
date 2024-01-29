@@ -11,6 +11,7 @@ import {
   launch as defaultChromiumLaunch,
 } from 'chrome-launcher';
 import WebSocket, { WebSocketServer } from 'ws';
+import set from 'set-value';
 
 import { createLogger } from '../util/logger.js';
 import { TempDir } from '../util/temp-dir.js';
@@ -28,6 +29,10 @@ const EXCLUDED_CHROME_FLAGS = [
 export const DEFAULT_CHROME_FLAGS = ChromeLauncher.defaultFlags().filter(
   (flag) => !EXCLUDED_CHROME_FLAGS.includes(flag),
 );
+
+const DEFAULT_PREFS = {
+  'extensions.ui.developer_mode': true,
+};
 
 /**
  * Implements an IExtensionRunner which manages a Chromium instance.
@@ -214,6 +219,7 @@ export class ChromiumExtensionRunner {
       userDataDir,
       // Ignore default flags to keep the extension enabled.
       ignoreDefaultFlags: true,
+      prefs: this.getPrefs(),
     });
 
     this.chromiumInstance.process.once('close', () => {
@@ -417,5 +423,19 @@ export class ChromiumExtensionRunner {
         log.error(error);
       }
     }
+  }
+
+  /**
+   * Returns a deep preferences object based on a set of flat preferences, like
+   * "extensions.ui.developer_mode".
+   */
+  getPrefs() {
+    return Object.entries({
+      ...DEFAULT_PREFS,
+      ...(this.params.customChromiumPrefs || {}),
+    }).reduce((prefs, [key, value]) => {
+      set(prefs, key, value);
+      return prefs;
+    }, {});
   }
 }

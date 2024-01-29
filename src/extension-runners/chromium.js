@@ -10,6 +10,7 @@ import {
   Launcher as ChromeLauncher,
   launch as defaultChromiumLaunch,
 } from 'chrome-launcher';
+import set from 'set-value';
 
 import { createLogger } from '../util/logger.js';
 import { TempDir } from '../util/temp-dir.js';
@@ -140,6 +141,10 @@ class ChromeDevtoolsProtocolClient {
     }
   }
 }
+
+const DEFAULT_PREFS = {
+  'extensions.ui.developer_mode': true,
+};
 
 /**
  * Implements an IExtensionRunner which manages a Chromium instance.
@@ -316,6 +321,7 @@ export class ChromiumExtensionRunner {
       logLevel: this.params.verbose ? 'verbose' : 'silent',
       // Ignore default flags to keep the extension enabled.
       ignoreDefaultFlags: true,
+      prefs: this.getPrefs(),
     });
     this.cdp = new ChromeDevtoolsProtocolClient(this.chromiumInstance);
 
@@ -582,5 +588,19 @@ export class ChromiumExtensionRunner {
         log.error(error);
       }
     }
+  }
+
+  /**
+   * Returns a deep preferences object based on a set of flat preferences, like
+   * "extensions.ui.developer_mode".
+   */
+  getPrefs() {
+    return Object.entries({
+      ...DEFAULT_PREFS,
+      ...(this.params.customChromiumPrefs || {}),
+    }).reduce((prefs, [key, value]) => {
+      set(prefs, key, value);
+      return prefs;
+    }, {});
   }
 }

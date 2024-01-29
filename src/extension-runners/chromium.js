@@ -126,7 +126,7 @@ export class ChromiumExtensionRunner {
 
     // Prevent unhandled socket error (e.g. when chrome
     // is exiting, See https://github.com/websockets/ws/issues/1256).
-    this.wss.on('connection', function(socket) {
+    this.wss.on('connection', function (socket) {
       socket.on('error', (err) => {
         log.debug(`websocket connection error: ${err}`);
       });
@@ -169,9 +169,9 @@ export class ChromiumExtensionRunner {
       ) {
         throw new Error(
           'The profile you provided is not in a ' +
-          'user-data-dir. The changes cannot be kept. Please either ' +
-          'remove --keep-profile-changes or use a profile in a ' +
-          'user-data-dir directory',
+            'user-data-dir. The changes cannot be kept. Please either ' +
+            'remove --keep-profile-changes or use a profile in a ' +
+            'user-data-dir directory',
         );
       }
     } else if (!this.params.keepProfileChanges) {

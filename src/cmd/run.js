@@ -66,7 +66,7 @@ export default async function run(
   if (preInstall) {
     log.info(
       "Disabled auto-reloading because it's not possible with " +
-      '--pre-install',
+        '--pre-install',
     );
     noReload = true;
   }
@@ -99,7 +99,7 @@ export default async function run(
     if (!profileDir) {
       throw new UsageError(
         '--profile-create-if-missing requires ' +
-        '--firefox-profile or --chromium-profile',
+          '--firefox-profile or --chromium-profile',
       );
     }
     const isDir = fs.existsSync(profileDir);

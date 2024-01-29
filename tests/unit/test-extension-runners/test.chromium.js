@@ -24,7 +24,7 @@ import isDirectory from '../../../src/util/is-directory.js';
 function prepareExtensionRunnerParams({ params } = {}) {
   const fakeChromeInstance = {
     process: new StubChildProcess(),
-    kill: sinon.spy(async () => { }),
+    kill: sinon.spy(async () => {}),
   };
   const runnerParams = {
     extensions: [
@@ -38,7 +38,7 @@ function prepareExtensionRunnerParams({ params } = {}) {
     chromiumLaunch: sinon.spy(async () => {
       return fakeChromeInstance;
     }),
-    desktopNotifications: sinon.spy(() => { }),
+    desktopNotifications: sinon.spy(() => {}),
     ...(params || {}),
   };
 
@@ -427,7 +427,7 @@ describe('util/extension-runners/chromium', async () => {
 
   it(
     'does pass existing user-data-dir and profile-directory flag' +
-    ' to chrome',
+      ' to chrome',
     async () =>
       withTempDir(async (tmpDir) => {
         const tmpPath = tmpDir.path();
@@ -567,7 +567,7 @@ describe('util/extension-runners/chromium', async () => {
 
   it(
     'does copy the profile and pass user-data-dir and profile-directory' +
-    ' flags',
+      ' flags',
     async () =>
       withTempDir(async (tmpDir) => {
         const tmpPath = tmpDir.path();

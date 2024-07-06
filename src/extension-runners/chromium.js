@@ -6,7 +6,6 @@
 import path from 'path';
 
 import fs from 'fs-extra';
-import { mkdirp as asyncMkdirp } from 'mkdirp';
 import {
   Launcher as ChromeLauncher,
   launch as defaultChromiumLaunch,
@@ -39,7 +38,6 @@ export class ChromiumExtensionRunner {
   params;
   chromiumInstance;
   chromiumLaunch;
-  reloadManagerExtension;
   wss;
   exiting;
   _promiseSetupDone;
@@ -132,12 +130,9 @@ export class ChromiumExtensionRunner {
       });
     });
 
-    // Create the extension that will manage the addon reloads
-    this.reloadManagerExtension = await this.createReloadManagerExtension();
-
     // Start chrome pointing it to a given profile dir
-    const extensions = [this.reloadManagerExtension]
-      .concat(this.params.extensions.map(({ sourceDir }) => sourceDir))
+    const extensions = this.params.extensions
+      .map(({ sourceDir }) => sourceDir)
       .join(',');
 
     const { chromiumBinary } = this.params;
@@ -265,74 +260,6 @@ export class ChromiumExtensionRunner {
         resolve();
       }
     });
-  }
-
-  async createReloadManagerExtension() {
-    const tmpDir = new TempDir();
-    await tmpDir.create();
-    this.registerCleanup(() => tmpDir.remove());
-
-    const extPath = path.join(
-      tmpDir.path(),
-      `reload-manager-extension-${Date.now()}`,
-    );
-
-    log.debug(`Creating reload-manager-extension in ${extPath}`);
-
-    await asyncMkdirp(extPath);
-
-    await fs.writeFile(
-      path.join(extPath, 'manifest.json'),
-      JSON.stringify({
-        manifest_version: 2,
-        name: 'web-ext Reload Manager Extension',
-        version: '1.0',
-        permissions: ['management', 'tabs'],
-        background: {
-          scripts: ['bg.js'],
-        },
-      }),
-    );
-
-    const wssInfo = this.wss.address();
-
-    const bgPage = `(function bgPage() {
-      async function getAllDevExtensions() {
-        const allExtensions = await new Promise(
-          r => chrome.management.getAll(r));
-
-        return allExtensions.filter((extension) => {
-          return extension.enabled &&
-            extension.installType === "development" &&
-            extension.id !== chrome.runtime.id;
-        });
-      }
-
-      const setEnabled = (extensionId, value) =>
-        chrome.runtime.id == extensionId ?
-        new Promise.resolve() :
-        new Promise(r => chrome.management.setEnabled(extensionId, value, r));
-
-      async function reloadExtension(extensionId) {
-        await setEnabled(extensionId, false);
-        await setEnabled(extensionId, true);
-      }
-
-      const ws = new window.WebSocket(
-        "ws://${wssInfo.address}:${wssInfo.port}");
-
-      ws.onmessage = async (evt) => {
-        const msg = JSON.parse(evt.data);
-        if (msg.type === 'webExtReloadAllExtensions') {
-          const devExtensions = await getAllDevExtensions();
-          await Promise.all(devExtensions.map(ext => reloadExtension(ext.id)));
-          ws.send(JSON.stringify({ type: 'webExtReloadExtensionComplete' }));
-        }
-      };
-    })()`;
-
-    await fs.writeFile(path.join(extPath, 'bg.js'), bgPage);
-    return extPath;
   }
 
   /**

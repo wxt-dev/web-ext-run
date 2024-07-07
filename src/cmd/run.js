@@ -51,6 +51,7 @@ export default async function run(
     chromiumBinary,
     chromiumPref,
     chromiumProfile,
+    chromiumPort,
   },
   {
     buildExtension = defaultBuildExtension,
@@ -195,6 +196,7 @@ export default async function run(
       chromiumBinary,
       chromiumProfile,
       customChromiumPrefs,
+      chromiumPort,
       noReloadManagerExtension,
     };
 

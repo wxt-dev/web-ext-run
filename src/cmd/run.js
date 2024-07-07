@@ -31,6 +31,7 @@ export default async function run(
     noInput = false,
     noReload = false,
     preInstall = false,
+    noReloadManagerExtension = false,
     sourceDir,
     watchFile,
     watchIgnored,
@@ -196,6 +197,7 @@ export default async function run(
       chromiumProfile,
       customChromiumPrefs,
       chromiumPort,
+      noReloadManagerExtension,
     };
 
     const chromiumRunner = await createExtensionRunner({

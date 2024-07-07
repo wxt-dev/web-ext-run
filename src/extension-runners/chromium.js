@@ -136,7 +136,9 @@ export class ChromiumExtensionRunner {
     this.reloadManagerExtension = await this.createReloadManagerExtension();
 
     // Start chrome pointing it to a given profile dir
-    const extensions = [this.reloadManagerExtension]
+    const extensions = (
+      this.params.noReloadManagerExtension ? [] : [this.reloadManagerExtension]
+    )
       .concat(this.params.extensions.map(({ sourceDir }) => sourceDir))
       .join(',');
 

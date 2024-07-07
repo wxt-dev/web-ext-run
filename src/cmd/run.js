@@ -50,6 +50,7 @@ export default async function run(
     chromiumBinary,
     chromiumPref,
     chromiumProfile,
+    chromiumPort,
   },
   {
     buildExtension = defaultBuildExtension,
@@ -194,6 +195,7 @@ export default async function run(
       chromiumBinary,
       chromiumProfile,
       customChromiumPrefs,
+      chromiumPort,
     };
 
     const chromiumRunner = await createExtensionRunner({

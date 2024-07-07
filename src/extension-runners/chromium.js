@@ -208,11 +208,9 @@ export class ChromiumExtensionRunner {
     }
 
     let port;
-    if (this.params.chromiumPort) {
-      if (!isNaN(this.params.chromiumPort)) {
-        port = this.params.chromiumPort;
-        log.debug(`(port: ${port})`);
-      }
+    if (this.params.chromiumPort && !isNaN(this.params.chromiumPort)) {
+      port = this.params.chromiumPort;
+      log.debug(`(port: ${port})`);
     }
 
     this.chromiumInstance = await this.chromiumLaunch({
@@ -224,7 +222,7 @@ export class ChromiumExtensionRunner {
       // Ignore default flags to keep the extension enabled.
       ignoreDefaultFlags: true,
       prefs: this.getPrefs(),
-      ...(typeof port !== 'undefined' ? { port } : {}),
+      port,
     });
 
     this.chromiumInstance.process.once('close', () => {

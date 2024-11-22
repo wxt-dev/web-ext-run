@@ -1,6 +1,7 @@
 import path from 'path';
+import nodeFs from 'fs';
+import fs from 'fs/promises';
 
-import { fs } from 'mz';
 import { afterEach, beforeEach, describe, it } from 'mocha';
 import { assert } from 'chai';
 import * as sinon from 'sinon';
@@ -126,6 +127,21 @@ describe('run', () => {
     sinon.assert.calledWithMatch(desktopRunnerStub, {
       startUrl: expectedStartUrls,
     });
+  });
+
+  it('turns sourceDir into an absolute path', async () => {
+    const getFakeManifest = sinon.spy();
+    const cmd = await prepareRun();
+
+    await cmd.run(
+      { sourceDir: '.' },
+      { getValidatedManifest: getFakeManifest },
+    );
+
+    sinon.assert.calledOnce(desktopRunnerStub);
+    const runnerParams = desktopRunnerStub.firstCall.args[0];
+    const [{ sourceDir: expectedSourceDir }] = runnerParams.extensions;
+    assert.equal(expectedSourceDir, process.cwd());
   });
 
   it('passes the expected parameters to the extension runner', async () => {
@@ -353,18 +369,18 @@ describe('run', () => {
   describe('profile-create-new option', () => {
     beforeEach(() => {
       sinon.stub(fs, 'mkdir');
-      sinon.stub(fs, 'existsSync');
+      sinon.stub(nodeFs, 'existsSync');
     });
 
     afterEach(() => {
       fs.mkdir.restore();
-      fs.existsSync.restore();
+      nodeFs.existsSync.restore();
     });
 
     const fakeProfile = '/pretend/path/to/profile';
 
     async function testCreateProfileIfMissing(expectProfileExists, runParams) {
-      fs.existsSync.returns(expectProfileExists);
+      nodeFs.existsSync.returns(expectProfileExists);
       const cmd = await prepareRun();
 
       await cmd.run(runParams);

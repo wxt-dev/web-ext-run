@@ -1,4 +1,6 @@
-import { fs } from 'mz';
+import path from 'path';
+import fs from 'fs/promises';
+import nodeFs from 'fs';
 
 import defaultBuildExtension from './build.js';
 import { showDesktopNotification as defaultDesktopNotifications } from '../util/desktop-notifier.js';
@@ -63,6 +65,7 @@ export default async function run(
     getValidatedManifest = defaultGetValidatedManifest,
   } = {},
 ) {
+  sourceDir = path.resolve(sourceDir);
   log.info(`Running web extension from ${sourceDir}`);
   if (preInstall) {
     log.info(
@@ -99,7 +102,7 @@ export default async function run(
           '--firefox-profile or --chromium-profile',
       );
     }
-    const isDir = fs.existsSync(profileDir);
+    const isDir = nodeFs.existsSync(profileDir);
     if (isDir) {
       log.info(`Profile directory ${profileDir} already exists`);
     } else {

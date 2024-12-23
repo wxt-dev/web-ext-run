@@ -1,5 +1,4 @@
-import { fs } from 'mz';
-import { mkdirp as defaultAsyncMkdirp } from 'mkdirp';
+import fs from 'fs/promises';
 
 import { UsageError, isErrorWithCode } from '../errors.js';
 import { createLogger } from './logger.js';
@@ -11,7 +10,7 @@ const defaultAsyncFsAccess = fs.access.bind(fs);
 export async function prepareArtifactsDir(
   artifactsDir,
   {
-    asyncMkdirp = defaultAsyncMkdirp,
+    asyncMkdirp = (dirPath) => fs.mkdir(dirPath, { recursive: true }),
     asyncFsAccess = defaultAsyncFsAccess,
   } = {},
 ) {
@@ -24,7 +23,7 @@ export async function prepareArtifactsDir(
     }
     // If the artifactsDir already exists, check that we have the write permissions on it.
     try {
-      await asyncFsAccess(artifactsDir, fs.W_OK);
+      await asyncFsAccess(artifactsDir, fs.constants.W_OK);
     } catch (accessErr) {
       if (isErrorWithCode('EACCES', accessErr)) {
         throw new UsageError(

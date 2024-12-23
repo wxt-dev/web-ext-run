@@ -49,7 +49,7 @@ describe('util/extension-runners/chromium', async () => {
   it('uses the expected chrome flags', () => {
     // Flags from chrome-launcher v1.1.0
     const expectedFlags = [
-      '--disable-features=Translate,OptimizationHints,MediaRouter,DialMediaRouteProvider,CalculateNativeWinOcclusion,InterestFeedContentSuggestions,CertificateTransparencyComponentUpdater,AutofillServerCommunication',
+      '--disable-features=Translate,OptimizationHints,MediaRouter,DialMediaRouteProvider,CalculateNativeWinOcclusion,InterestFeedContentSuggestions,CertificateTransparencyComponentUpdater,AutofillServerCommunication,PrivacySandboxSettings4',
       '--disable-component-extensions-with-background-pages',
       '--disable-background-networking',
       '--disable-client-side-phishing-detection',
@@ -68,6 +68,7 @@ describe('util/extension-runners/chromium', async () => {
       '--disable-hang-monitor',
       '--disable-prompt-on-repost',
       '--disable-domain-reliability',
+      '--propagate-iph-for-testing',
     ];
 
     assert.deepEqual(DEFAULT_CHROME_FLAGS, expectedFlags);

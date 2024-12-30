@@ -18,12 +18,23 @@ const log = createLogger(import.meta.url);
 // Run command types and implementation.
 
 export default async function run(
+  config,
   {
+    buildExtension = defaultBuildExtension,
+    desktopNotifications = defaultDesktopNotifications,
+    firefoxApp = defaultFirefoxApp,
+    firefoxClient = defaultFirefoxClient,
+    reloadStrategy = defaultReloadStrategy,
+    MultiExtensionRunner = DefaultMultiExtensionRunner,
+    getValidatedManifest = defaultGetValidatedManifest,
+  } = {},
+) {
+  const {
     artifactsDir,
     browserConsole = false,
     devtools = false,
     pref,
-    firefox,
+    firefox = config.firefoxBinary,
     firefoxProfile,
     profileCreateIfMissing,
     keepProfileChanges = false,
@@ -52,17 +63,8 @@ export default async function run(
     chromiumPref,
     chromiumProfile,
     chromiumPort,
-  },
-  {
-    buildExtension = defaultBuildExtension,
-    desktopNotifications = defaultDesktopNotifications,
-    firefoxApp = defaultFirefoxApp,
-    firefoxClient = defaultFirefoxClient,
-    reloadStrategy = defaultReloadStrategy,
-    MultiExtensionRunner = DefaultMultiExtensionRunner,
-    getValidatedManifest = defaultGetValidatedManifest,
-  } = {},
-) {
+  } = config;
+
   log.info(`Running web extension from ${sourceDir}`);
   if (preInstall) {
     log.info(

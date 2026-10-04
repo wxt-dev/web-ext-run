@@ -1,3 +1,7 @@
+> [!WARNING]
+>
+> This repo is archived, it is no longer used as of WXT v0.21. Use the offical `web-ext` package instead.
+
 # Web-ext
 
 This is a command line tool to help build, run, and test
